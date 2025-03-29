@@ -1,7 +1,7 @@
-"use client";
-import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/auth/authSlice";
+'use client';
+import Link from 'next/link';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
 
 export default function Nav() {
 	const dispatch = useDispatch();
@@ -10,24 +10,28 @@ export default function Nav() {
 	const handleLogout = () => {
 		dispatch(logout());
 	};
-
+	const { cartItems } = useSelector((state) => state.cart);
+	const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 	return (
-		<div className="nav_component">
+		<div className='nav_component'>
 			<h1>BAGGY</h1>
 
-			<div className="items">
+			<div className='items'>
 				<ul>
 					<li>
-						<Link href="/">Home</Link>
+						<Link href='/'>Home</Link>
 					</li>
 					<li>
-						<Link href="/cart">Cart</Link>
+						<Link href='/cart' className='cart-link'>
+							🛒{' '}
+							{itemCount > 0 && <span className='cart-count'>{itemCount}</span>}
+						</Link>
 					</li>
 
 					{/* Show Add Product only if user is admin */}
-					{user?.role === "admin" && (
+					{user?.role === 'admin' && (
 						<li>
-							<Link href="/addProduct">Add Product</Link>
+							<Link href='/addProduct'>Add Product</Link>
 						</li>
 					)}
 
@@ -35,10 +39,10 @@ export default function Nav() {
 					{!user ? (
 						<>
 							<li>
-								<Link href="/login">Login</Link>
+								<Link href='/login'>Login</Link>
 							</li>
 							<li>
-								<Link href="/signup">Signup</Link>
+								<Link href='/signup'>Signup</Link>
 							</li>
 						</>
 					) : (
