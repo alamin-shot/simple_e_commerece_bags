@@ -1,36 +1,38 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { setCurrentProduct } from './features/cart/cartSlice.jsx';
+import {
+	setCurrentProduct,
+	setProducts,
+	setProductsLoading,
+	setProductsError,
+} from './features/cart/cartSlice.jsx';
 
 export default function Home() {
-	const [products, setProducts] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
 	const dispatch = useDispatch();
 	const router = useRouter();
-
+	const { products, loading, error } = useSelector((state) => state.cart);
 	const user = useSelector((state) => state.auth.user);
 
 	useEffect(() => {
-		const fetchProducts = async () => {
-			try {
-				const res = await fetch('/api/products');
-				if (!res.ok) {
-					throw new Error('Failed to fetch products');
+		// Only fetch if we don't have products
+		if (products.length === 0) {
+			dispatch(setProductsLoading());
+			const fetchProducts = async () => {
+				try {
+					const res = await fetch('/api/products');
+					if (!res.ok) throw new Error('Failed to fetch products');
+					const data = await res.json();
+					dispatch(setProducts(data.data));
+				} catch (error) {
+					dispatch(setProductsError(error.message));
 				}
-				const data = await res.json();
-				setProducts(data.data);
-			} catch (error) {
-				setError(error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchProducts();
-	}, []);
+			};
+			fetchProducts();
+		}
+	}, [dispatch, products.length]);
 
 	const addToProductDetailsHandler = (product) => {
 		if (!user) {
