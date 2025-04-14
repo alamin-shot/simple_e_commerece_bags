@@ -1,6 +1,5 @@
 import axios from "@/app/lib/axios";
 import Cookies from "js-cookie";
-import { redirect } from "next/navigation";
 
 export const loginApi = async (email, password) => {
 	const response = await axios.post("/auth/login", { email, password });
