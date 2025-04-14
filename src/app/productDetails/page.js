@@ -11,8 +11,8 @@ const CartSection = () => {
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
 	const product = useSelector((state) => state.cart.currentProduct);
+	console.log('Current product:', product);
 	const cartItems = useSelector((state) => state.cart.cartItems);
-
 	const existingCartItem = cartItems.find((item) => item.id === product?.id);
 	const handleAddToCart = () => {
 		if (!product) return;
@@ -57,6 +57,7 @@ const CartSection = () => {
 					width={345}
 					height={345}
 					className='product-image'
+					priority={true}
 				/>
 			</div>
 

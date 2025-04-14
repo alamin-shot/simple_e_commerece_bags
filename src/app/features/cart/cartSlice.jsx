@@ -2,10 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
 	currentProduct: null,
-	cartItems: [],
-	products: [], // Add products cache
-	loading: false,
-	error: null,
+	cartItems: [], // This will store all cart items
 };
 
 const cartSlice = createSlice({
@@ -19,12 +16,12 @@ const cartSlice = createSlice({
 			state.cartItems.push({
 				...action.payload,
 				quantity: action.payload.quantity || 1,
-				cartItemId: Date.now(),
+				cartItemId: Date.now(), // Add unique identifier
 			});
 		},
 		removeFromCart: (state, action) => {
 			state.cartItems = state.cartItems.filter(
-				(item) => item.cartItemId !== action.payload
+				(item) => item.cartItemId  !== action.payload
 			);
 		},
 		updateQuantity: (state, action) => {
@@ -37,20 +34,6 @@ const cartSlice = createSlice({
 		clearCart: (state) => {
 			state.cartItems = [];
 		},
-		// Add these new reducers for product caching
-		setProducts: (state, action) => {
-			state.products = action.payload;
-			state.loading = false;
-			state.error = null;
-		},
-		setProductsLoading: (state) => {
-			state.loading = true;
-			state.error = null;
-		},
-		setProductsError: (state, action) => {
-			state.loading = false;
-			state.error = action.payload;
-		},
 	},
 });
 
@@ -60,9 +43,6 @@ export const {
 	removeFromCart,
 	updateQuantity,
 	clearCart,
-	setProducts,
-	setProductsLoading,
-	setProductsError,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
